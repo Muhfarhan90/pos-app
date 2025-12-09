@@ -1,6 +1,14 @@
 @extends('customer.layouts.master')
 
 @section('content')
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Keranjang</h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item active text-primary">Lihat dan kelola item dalam keranjang Anda</li>
+        </ol>
+    </div>
+    <!-- Single Page Header End -->
     <!-- Cart Page Start -->
     <div class="container-fluid py-5">
         <div class="container py-5">
@@ -95,7 +103,9 @@
                     $total = $subtotal + $tax;
                 @endphp
                 <div>
-                    <a href="{{ route('cart.clear') }}" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus semua item yang ada di keranjang?')">Kosongkan Keranjang</a>
+                    <a href="{{ route('cart.clear') }}" class="btn btn-danger"
+                        onclick="return confirm('Apakah anda yakin ingin menghapus semua item yang ada di keranjang?')">Kosongkan
+                        Keranjang</a>
                 </div>
                 <div class="row g-4 justify-content-end mt-1">
                     <div class="col-8"></div>

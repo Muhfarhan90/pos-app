@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class MenuController extends Controller
 {
     public function index(Request $request)
     {
-        $tableNumber = $request->query('table');
+        $tableNumber = $request->query('meja');
         if ($tableNumber) {
             Session::put('table_number', $tableNumber);
         }
@@ -27,6 +31,7 @@ class MenuController extends Controller
         return view('customer.cart', compact('cart'));
     }
 
+    // Cart Operations
     public function addToCart(Request $request)
     {
         $menuId = $request->input('id');
@@ -114,5 +119,104 @@ class MenuController extends Controller
         Session::forget('cart');
         Session::flash('success', 'Keranjang berhasil dikosongkan');
         return redirect()->route('menu')->with('success', 'Keranjang berhasil dikosongkan');
+    }
+
+    // Checkout Operations
+    public function checkout()
+    {
+        $cart = Session::get('cart');
+        if (empty($cart)) {
+            return redirect()->route('cart')->with('error', 'Keranjang Anda kosong. Silakan tambahkan item sebelum melanjutkan ke checkout.');
+        }
+        $tableNumber = Session::get('table_number');
+
+        return view('customer.checkout', compact('cart', 'tableNumber'));
+    }
+
+    public function storeOrder(Request $request)
+    {
+        $cart = Session::get('cart');
+        $tableNumber = Session::get('table_number');
+
+        if (empty($cart)) {
+            return redirect()->route('cart')->with('error', 'Keranjang Anda kosong. Silakan tambahkan item sebelum melanjutkan ke checkout.');
+        }
+        if (!$tableNumber) {
+            return redirect()->route('menu')->with('error', 'Nomor meja tidak ditemukan. Silakan pilih nomor meja terlebih dahulu.');
+        }
+
+        $validator = Validator::make($request->all(), [
+            'fullname' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $totalAmount = 0;
+        foreach ($cart as $item) {
+            $totalAmount += $item['price'] * $item['qty'];
+
+            $itemDetails[] = [
+                'id' => $item['id'],
+                'name' => substr($item['name'], 0, 50),
+                'price' => (int)$item['price'] + ($item['price'] * 0.1), // Including 10% tax
+                'quantity' => $item['qty'],
+                'subtotal' => $item['price'] * $item['qty'],
+            ];
+        }
+
+        $user = User::firstOrCreate([
+            'fullname' => $request->input('fullname'),
+            'phone' => $request->input('phone'),
+            'role_id' => 4,
+        ]);
+
+        $order = Order::create([
+            'order_code' => 'ORD-' .  $tableNumber . '-' . time(),
+            'user_id' => $user->id,
+            'subtotal' => $totalAmount,
+            'tax' => $totalAmount * 0.1,
+            'grand_total' => $totalAmount + ($totalAmount * 0.1),
+            'status' => 'pending',
+            'table_number' => $tableNumber,
+            'payment_method' => $request->payment,
+            'notes' => $request->notes,
+        ]);
+
+        foreach ($cart as $itemId => $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'item_id' => $item['id'],
+                'quantity' => $item['qty'],
+                'price' => $item['price'] * $item['qty'], // Including 10% tax
+                'tax' => $item['price'] * $item['qty'] * 0.1,
+                'total_price' => $item['price'] * $item['qty'] + ($item['price'] * $item['qty'] * 0.1),
+            ]);
+        }
+
+
+        Session::forget('cart');
+
+        return redirect()->route('checkout.success', ['orderId' => $order->order_code])->with('success', 'Pesanan Anda telah berhasil diproses!');
+    }
+
+    public function checkoutSuccess($orderId)
+    {
+        $order = Order::where('order_code', $orderId)->first();
+        if (!$order) {
+            return redirect()->route('menu')->with('error', 'Pesanan tidak ditemukan.');
+        }
+        $orderItems = OrderItem::where('order_id', $order->id)->get();
+
+        if ($order->payment_method == 'qris') {
+            $order->status = 'settlement';
+            $order->save();
+        }
+
+        return view('customer.success', compact('order', 'orderItems'));
     }
 }
