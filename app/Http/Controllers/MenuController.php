@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Midtrans\Config;
+use Midtrans\Snap;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class MenuController extends Controller
@@ -163,9 +165,9 @@ class MenuController extends Controller
             $itemDetails[] = [
                 'id' => $item['id'],
                 'name' => substr($item['name'], 0, 50),
-                'price' => (int)$item['price'] + ($item['price'] * 0.1), // Including 10% tax
+                'price' => (int)($item['price'] + ($item['price'] * 0.1)), // Including 10% tax
                 'quantity' => $item['qty'],
-                'subtotal' => $item['price'] * $item['qty'],
+                'subtotal' => (int)($item['price'] * $item['qty']),
             ];
         }
 
@@ -201,7 +203,41 @@ class MenuController extends Controller
 
         Session::forget('cart');
 
-        return redirect()->route('checkout.success', ['orderId' => $order->order_code])->with('success', 'Pesanan Anda telah berhasil diproses!');
+        if ($request->payment == 'tunai') {
+            return redirect()->route('checkout.success', ['orderId' => $order->order_code])->with('success', 'Pesanan Anda telah berhasil diproses!');
+        } else {
+            Config::$serverKey = config('midtrans.server_key');
+            Config::$isProduction = config('midtrans.is_production');
+            Config::$isSanitized = config('midtrans.is_sanitized');
+            Config::$is3ds = config('midtrans.is_3ds');
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $order->order_code,
+                    'gross_amount' => (int) $order->grand_total,
+                ],
+                'item_details' => $itemDetails,
+                'customer_details' => [
+                    'first_name' => $user->fullname,
+                    'phone' => $user->phone,
+                ],
+                'payment_type' => ['qris'],
+            ];
+            try {
+                $snapToken = Snap::getSnapToken($params);
+
+                return response()->json([
+                    'success' => 'success',
+                    'snap_token' => $snapToken,
+                    'order_code' => $order->order_code,
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => 'error',
+                    'message' => 'Terjadi kesalahan saat memproses pembayaran: ' . $e->getMessage(),
+                ]);
+            }
+        }
     }
 
     public function checkoutSuccess($orderId)
@@ -213,7 +249,7 @@ class MenuController extends Controller
         $orderItems = OrderItem::where('order_id', $order->id)->get();
 
         if ($order->payment_method == 'qris') {
-            $order->status = 'settlement';
+            $order->status = 'paid';
             $order->save();
         }
 
