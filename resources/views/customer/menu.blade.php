@@ -3,6 +3,12 @@
 @section('content')
     <!-- Fruits Shop Start-->
     <div class="container-fluid fruite py-5">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="container py-5">
             <div class="row g-4">
                 <div class="col-lg-12">
@@ -39,17 +45,17 @@
 
                                 <!-- Pagination -->
                                 <!-- <div class="col-12">
-                                                                                                                                                                            <div class="pagination d-flex justify-content-center mt-5">
-                                                                                                                                                                                <a href="#" class="rounded">&laquo;</a>
-                                                                                                                                                                                <a href="#" class="active rounded">1</a>
-                                                                                                                                                                                <a href="#" class="rounded">2</a>
-                                                                                                                                                                                <a href="#" class="rounded">3</a>
-                                                                                                                                                                                <a href="#" class="rounded">4</a>
-                                                                                                                                                                                <a href="#" class="rounded">5</a>
-                                                                                                                                                                                <a href="#" class="rounded">6</a>
-                                                                                                                                                                                <a href="#" class="rounded">&raquo;</a>
-                                                                                                                                                                            </div>
-                                                                                                                                                                        </div> -->
+                                                                                                                                                                                    <div class="pagination d-flex justify-content-center mt-5">
+                                                                                                                                                                                        <a href="#" class="rounded">&laquo;</a>
+                                                                                                                                                                                        <a href="#" class="active rounded">1</a>
+                                                                                                                                                                                        <a href="#" class="rounded">2</a>
+                                                                                                                                                                                        <a href="#" class="rounded">3</a>
+                                                                                                                                                                                        <a href="#" class="rounded">4</a>
+                                                                                                                                                                                        <a href="#" class="rounded">5</a>
+                                                                                                                                                                                        <a href="#" class="rounded">6</a>
+                                                                                                                                                                                        <a href="#" class="rounded">&raquo;</a>
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                </div> -->
                             </div>
                         </div>
                     </div>
