@@ -21,7 +21,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.category.create');
     }
 
     /**
@@ -29,7 +29,23 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request data
+        $validatedData = $request->validate(
+            [
+                'cat_name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+            ],
+            [
+                'cat_name.required' => 'The category name is required.',
+                'description.string' => 'The description must be a string.',
+            ]
+        );
+
+        // Create a new category
+        Category::create($validatedData);
+
+        // Redirect to the categories index with a success message
+        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
     }
 
     /**
@@ -45,7 +61,8 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $category = Category::findOrfail($id);
+        return view('admin.category.edit', compact('category'));
     }
 
     /**
@@ -53,7 +70,22 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        // Validate the request data
+        $validatedData = $request->validate(
+            [
+                'cat_name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+            ],
+            [
+                'cat_name.required' => 'The category name is required.',
+                'description.string' => 'The description must be a string.',
+            ]
+        );
+
+        $category->update($validatedData);
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
 
     /**
@@ -61,6 +93,9 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
 }

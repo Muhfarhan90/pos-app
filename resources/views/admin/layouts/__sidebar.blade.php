@@ -53,7 +53,7 @@
                 <li class="sidebar-item {{ request()->routeIs('admin.items.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.items.index') }}" class='sidebar-link'>
                         <i class="bi bi-card-list"></i>
-                        <span>Daftar Item</span>
+                        <span>Manajemen Item</span>
                     </a>
                 </li>
 
@@ -74,7 +74,7 @@
                 <li class="sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.users.index') }}" class='sidebar-link'>
                         <i class="bi bi-person-fill"></i>
-                        <span>Manajemen Karyawan</span>
+                        <span>Manajemen User</span>
                     </a>
                 </li>
 

@@ -31,7 +31,7 @@
                             <div class="form-group">
                                 <label for="item">Nama Item</label>
                                 <input type="text" class="form-control" id="item" placeholder="Masukkan Nama Item"
-                                    name="name" required>
+                                    name="name" required value="{{ old('name') }}">
                             </div>
                             <div class="form-group">
                                 <label for="description">Deskripsi</label>
@@ -40,7 +40,7 @@
                             <div class="form-group">
                                 <label for="price">Harga</label>
                                 <input type="number" class="form-control" id="price" placeholder="Masukkan Harga"
-                                    name="price" required>
+                                    name="price" required value="{{ old('price') }}">
                             </div>
 
 
@@ -51,7 +51,7 @@
                                 <select name="category_id" id="category" class="form-select" required>
                                     <option value="" disabled selected>Pilih Kategori</option>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->cat_name }}</option>
+                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->cat_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
