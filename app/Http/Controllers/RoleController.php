@@ -21,7 +21,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.role.create');
     }
 
     /**
@@ -29,7 +29,23 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request data
+        $validatedData = $request->validate(
+            [
+                'role_name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+            ],
+            [
+                'role_name.required' => 'The role name is required.',
+                'description.string' => 'The description must be a string.',
+            ]
+        );
+
+        // Create a new role
+        Role::create($validatedData);
+
+        // Redirect to the roles index with a success message
+        return redirect()->route('admin.roles.index')->with('success', 'Role created successfully.');
     }
 
     /**
@@ -45,7 +61,8 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        return view('admin.role.edit', compact('role'));
     }
 
     /**
@@ -53,7 +70,22 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        // Validate the request data
+        $validatedData = $request->validate(
+            [
+                'role_name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+            ],
+            [
+                'role_name.required' => 'The role name is required.',
+                'description.string' => 'The description must be a string.',
+            ]
+        );
+
+        $role->update($validatedData);
+
+        return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
     }
 
     /**
@@ -61,6 +93,9 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->delete();
+
+        return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully.');
     }
 }

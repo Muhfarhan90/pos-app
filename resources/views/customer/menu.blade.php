@@ -28,7 +28,7 @@
                                     <div class="col-md-6 col-lg-6 col-xl-4">
                                         <div class="rounded position-relative fruite-item">
                                             <div class="fruite-img">
-                                                <img src="{{ $item->img }}" class="img-fluid w-100 rounded-top"
+                                                <img src="{{ asset('img_item_upload/' . $item->img) }}" class="img-fluid w-100 rounded-top"
                                                     alt=""
                                                     onerror="this.onerror=null;this.src='{{ asset('assets/customer/img/no-image.png') }}';">
                                             </div>

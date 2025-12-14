@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Tambah Menu')
+@section('title', 'Tambah Item')
 
 @section('content')
     <div class="page-title">
@@ -13,8 +13,18 @@
     </div>
     <div class="card">
         <div class="card-body">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form class="form" action="{{ route('admin.items.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('POST')
                 <div class="form-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -38,7 +48,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="category">Kategori</label>
-                                <select name="category_id" id="category" class="form-select">
+                                <select name="category_id" id="category" class="form-select" required>
                                     <option value="" disabled selected>Pilih Kategori</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->cat_name }}</option>
@@ -48,7 +58,7 @@
                             <div class="form-group">
                                 <label for="image">Gambar</label>
                                 <input type="file" class="form-control" id="image" placeholder="Masukkan Gambar"
-                                    name="img">
+                                    name="img" required>
                             </div>
                             <div class="form-group">
                                 <label for="is_active">Status</label>
@@ -61,7 +71,7 @@
                             </div>
 
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12 mt-4">
                             <div class="form-group d-flex justify-content-between items-center">
                                 <div>
                                     <a href="{{ route('admin.items.index') }}" class="btn btn-primary">Batal</a>
