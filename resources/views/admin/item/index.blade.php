@@ -62,14 +62,38 @@
                                     </td>
                                     <td><a href="{{ route('admin.items.edit', $item->id) }}"
                                             class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i>Edit</a>
-                                        <form action="{{ route('admin.items.destroy', $item->id) }}" method="POST"
+                                        @if ($item->is_active == 1)
+                                            <form action="{{ route('admin.items.updateStatus', $item->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                <input type="hidden" name="id" value="0">
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Apakah anda yakin ingin menonaktifkan item ini?')">
+                                                    <i class="bi bi-x-circle"></i>
+                                                    Nonaktifkan
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('admin.items.updateStatus', $item->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                <input type="hidden" name="id" value="1">
+                                                <button type="submit" class="btn btn-sm btn-success"
+                                                    onclick="return confirm('Apakah anda yakin ingin mengaktifkan item ini?')">
+                                                    <i class="bi bi-check-circle"></i>
+                                                    Aktifkan
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        {{-- <form action="{{ route('admin.items.destroy', $item->id) }}" method="POST"
                                             class="d-inline"
                                             onsubmit="return confirm('Are you sure you want to delete this item?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger"><i
                                                     class="bi bi-trash"></i>Delete</button>
-                                        </form>
+                                        </form> --}}
                                     </td>
                                 </tr>
                             @endforeach

@@ -43,7 +43,7 @@
                         <div class="row">
                             <div class="col-md-12 col-lg-12">
                                 <div class="form-item">
-                                    <textarea name="notes" class="form-control" spellcheck="false" cols="30" rows="5"
+                                    <textarea name="note" class="form-control" spellcheck="false" cols="30" rows="5"
                                         placeholder="Catatan pesanan (Opsional)"></textarea>
                                 </div>
                             </div>
@@ -74,9 +74,11 @@
                                             <tr>
                                                 <th scope="row">
                                                     <div class="d-flex align-items-center mt-2">
-                                                        <img src="{{ $item['image'] }}" class="img-fluid rounded-circle"
-                                                            style="width: 100px; height: 90px; object-fit: cover;"
-                                                            alt="">
+                                                        <img src="{{ asset('img_item_upload/' . $item['image']) ?? asset('assets/customer/img/no-image.png') }}"
+                                                            class="img-fluid me-5 rounded-circle"
+                                                            style="width: 80px; height: 80px;" alt=""
+                                                            onerror="this.onerror=null;this.src='{{ $item['image'] }}';">
+
                                                     </div>
                                                 </th>
                                                 <td class="py-5">{{ $item['name'] }}</td>

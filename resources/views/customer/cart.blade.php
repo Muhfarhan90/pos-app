@@ -50,7 +50,7 @@
                                 <tr>
                                     <th scope="row">
                                         <div class="d-flex align-items-center">
-                                            <img src="{{ $item['image'] ?? asset('assets/customer/img/no-image.png') }}"
+                                            <img src="{{ asset('img_item_upload/' . $item['image']) ?? asset('assets/customer/img/no-image.png') }}"
                                                 class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;"
                                                 alt="" onerror="this.onerror=null;this.src='{{ $item['image'] }}';">
 

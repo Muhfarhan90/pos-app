@@ -39,3 +39,4 @@ Route::resource('admin/roles', RoleController::class)->names('admin.roles');
 Route::resource('admin/items', ItemController::class)->names('admin.items');
 Route::resource('admin/users', UserController::class)->names('admin.users');
 Route::resource('admin/orders', OrderController::class)->names('admin.orders');
+Route::post('/admin/items/{id}/update-status', [ItemController::class, 'updateStatus'])->name('admin.items.updateStatus');
