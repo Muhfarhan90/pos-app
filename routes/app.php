@@ -31,9 +31,7 @@ Route::get('/checkout/success/{orderId}', [MenuController::class, 'checkoutSucce
 
 // Admin Routes
 Route::middleware('role:admin')->group(function () {
-    Route::resource('admin/categories', CategoryController::class)->names('admin.categories');
     Route::resource('admin/roles', RoleController::class)->names('admin.roles');
-    Route::resource('admin/items', ItemController::class)->names('admin.items');
     Route::resource('admin/users', UserController::class)->names('admin.users');
 });
 
@@ -42,4 +40,6 @@ Route::middleware('role:admin|cashier|chef')->group(function () {
     Route::resource('admin/orders', OrderController::class)->names('admin.orders');
     Route::post('/admin/items/{id}/update-status', [ItemController::class, 'updateStatus'])->name('admin.items.updateStatus');
     Route::post('/admin/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    Route::resource('admin/categories', CategoryController::class)->names('admin.categories');
+    Route::resource('admin/items', ItemController::class)->names('admin.items');
 });

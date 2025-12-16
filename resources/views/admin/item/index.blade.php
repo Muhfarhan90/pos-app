@@ -41,7 +41,7 @@
                                 <th>Harga</th>
                                 <th>Kategori</th>
                                 <th>Status</th>
-                                <th>Aksi</th>
+                                <th colspan="2">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,13 +55,23 @@
                                     <td>{{ Str::limit($item->description, 50) }}</td>
                                     <td>{{ 'Rp.' . number_format($item->price, 0, ',', '.') }}</td>
                                     <td><span
-                                            class="badge {{ $item->category->cat_name == 'Makanan' ? 'bg-light-warning' : 'bg-light-info' }}">{{ $item->category->cat_name }}</span>
+                                            class="badge {{ $item->category?->cat_name == 'Makanan' ? 'bg-light-warning' : 'bg-light-info' }}">{{ $item->category?->cat_name }}</span>
                                     </td>
                                     <td><span
                                             class="badge {{ $item->is_active ? 'bg-light-success' : 'bg-light-danger' }}">{{ $item->is_active ? 'Active' : 'Inactive' }}</span>
                                     </td>
                                     <td><a href="{{ route('admin.items.edit', $item->id) }}"
                                             class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i>Edit</a>
+                                        {{-- <form action="{{ route('admin.items.destroy', $item->id) }}" method="POST"
+                                            class="d-inline"
+                                            onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger"><i
+                                                    class="bi bi-trash"></i>Delete</button>
+                                        </form> --}}
+                                    </td>
+                                    <td>
                                         @if ($item->is_active == 1)
                                             <form action="{{ route('admin.items.updateStatus', $item->id) }}"
                                                 method="POST">
@@ -85,15 +95,6 @@
                                                 </button>
                                             </form>
                                         @endif
-
-                                        {{-- <form action="{{ route('admin.items.destroy', $item->id) }}" method="POST"
-                                            class="d-inline"
-                                            onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger"><i
-                                                    class="bi bi-trash"></i>Delete</button>
-                                        </form> --}}
                                     </td>
                                 </tr>
                             @endforeach

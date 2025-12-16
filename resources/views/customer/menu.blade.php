@@ -32,9 +32,9 @@
                                                     alt=""
                                                     onerror="this.onerror=null;this.src='{{ asset('assets/customer/img/no-image.png') }}';">
                                             </div>
-                                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute @if ($item->category->cat_name == 'Makanan') bg-warning @elseif ($item->category->cat_name == 'Minuman') bg-info @else bg-primary @endif"
+                                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute @if ($item->category?->cat_name == 'Makanan') bg-warning @elseif ($item->category?->cat_name == 'Minuman') bg-info @else bg-primary @endif"
                                                 style="top: 10px; left: 10px;">
-                                                {{ $item->category->cat_name }}</div>
+                                                {{ $item->category?->cat_name ?? 'Tidak ada kategori' }}</div>
                                             <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                                 <h4>{{ $item->name }}</h4>
                                                 <p class="text-limited">{{ $item->description }}</p>

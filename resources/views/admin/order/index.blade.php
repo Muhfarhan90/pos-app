@@ -43,7 +43,7 @@
                                 <th>Metode Pembayaran</th>
                                 <th>Notes</th>
                                 <th>Dibuat Pada</th>
-                                <th>Aksi</th>
+                                <th colspan="2">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,8 +56,8 @@
                                     <td>{{ 'Rp' . number_format($order->grand_total, 0, ',', '.') }}</td>
                                     <td>
                                         <span
-                                            class="badge {{ $order->status == 'settlement' ? 'bg-success' : ($order->status == 'pending' ? 'bg-warning' : ($order->status == 'cooked' ? 'bg-primary' : 'bg-danger')) }}">
-                                            {{ $order->status }}
+                                            class="badge {{ $order->status == 'paid' ? 'bg-light-success' : ($order->status == 'pending' ? 'bg-light-warning' : ($order->status == 'cooked' ? 'bg-light-primary' : 'bg-danger')) }}">
+                                            {{ Str::ucfirst(string: $order->status) }}
                                         </span>
                                     </td>
                                     <td>{{ $order->table_number }}</td>
@@ -70,6 +70,9 @@
                                                 <i class="bi bi-eye"></i> Lihat
                                             </a>
                                         </span>
+
+                                    </td>
+                                    <td>
                                         @if (Auth::user()->role->role_name == 'admin' || Auth::user()->role->role_name == 'cashier')
                                             @if ($order->status == 'pending' && $order->payment_method == 'tunai')
                                                 <form action="{{ route('admin.orders.updateStatus', $order->id) }}"

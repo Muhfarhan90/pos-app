@@ -5,7 +5,8 @@
                 <h4 class="logo">
                     <a href="{{ url('index') }}">POS.APP</a>
                 </h4>
-                <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
+                <div class="theme-toggle d-flex gap-2 align-items-center mt-2">
+                    <!-- Sun Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
                         role="img" class="iconify iconify--system-uicons" width="20" height="20"
                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21">
@@ -22,10 +23,14 @@
                             </g>
                         </g>
                     </svg>
+
+                    <!-- Toggle Switch -->
                     <div class="form-check form-switch fs-6">
-                        <input class="form-check-input  me-0" type="checkbox" id="toggle-dark" style="cursor: pointer">
-                        <label class="form-check-label"></label>
+                        <input class="form-check-input me-0" type="checkbox" id="toggle-dark" style="cursor: pointer">
+                        <label class="form-check-label" for="toggle-dark"></label>
                     </div>
+
+                    <!-- Moon Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                         aria-hidden="true" role="img" class="iconify iconify--mdi" width="20" height="20"
                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
@@ -34,75 +39,72 @@
                         </path>
                     </svg>
                 </div>
-                <div class="sidebar-toggler  x">
+
+                <!-- Sidebar Toggler -->
+                <div class="sidebar-toggler x">
                     <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                 </div>
             </div>
         </div>
+
+        <!-- Sidebar Menu -->
         <div class="sidebar-menu">
             <ul class="menu">
-                <li class="sidebar-title">Item</li>
+                <li class="sidebar-title">Menu</li>
 
                 <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <a href="{{ route('admin.dashboard') }}" class='sidebar-link'>
+                    <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
                 <li class="sidebar-item {{ request()->routeIs('admin.items.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.items.index') }}" class='sidebar-link'>
-                        <i class="bi bi-card-list"></i>
+                    <a href="{{ route('admin.items.index') }}" class="sidebar-link">
+                        <i class="bi bi-box-seam"></i>
                         <span>Manajemen Item</span>
                     </a>
                 </li>
 
                 <li class="sidebar-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.categories.index') }}" class='sidebar-link'>
-                        <i class="bi bi-person-fill"></i>
+                    <a href="{{ route('admin.categories.index') }}" class="sidebar-link">
+                        <i class="bi bi-tag-fill"></i>
                         <span>Manajemen Kategori</span>
                     </a>
                 </li>
 
                 <li class="sidebar-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.orders.index') }}" class='sidebar-link'>
+                    <a href="{{ route('admin.orders.index') }}" class="sidebar-link">
                         <i class="bi bi-cart-fill"></i>
                         <span>Daftar Order</span>
                     </a>
                 </li>
 
                 <li class="sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.users.index') }}" class='sidebar-link'>
+                    <a href="{{ route('admin.users.index') }}" class="sidebar-link">
                         <i class="bi bi-person-fill"></i>
                         <span>Manajemen User</span>
                     </a>
                 </li>
 
                 <li class="sidebar-item {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.roles.index') }}" class='sidebar-link'>
-                        <i class="bi bi-person-fill"></i>
+                    <a href="{{ route('admin.roles.index') }}" class="sidebar-link">
+                        <i class="bi bi-shield-lock-fill"></i>
                         <span>Manajemen Role</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <form method="POST" action="{{ route('logout') }}" class='sidebar-link'
-                        onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                        @csrf
-                        <i class="bi bi-box-arrow-right"></i>
-                        <span>{{ __('Log Out') }}</span>
-                    </form>
-                </li>
-                <!-- Authentication -->
-                {{-- <form method="POST" action="{{ route('logout') }}">
-                    @csrf
 
-                    <x-dropdown-link :href="route('logout')"
-                        onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-dropdown-link>
-                </form> --}}
+                <li class="sidebar-item">
+                    <a href="{{ route('logout') }}" class="sidebar-link"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
             </ul>
         </div>
     </div>
