@@ -84,6 +84,25 @@
                         <span>Manajemen Role</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <form method="POST" action="{{ route('logout') }}" class='sidebar-link'
+                        onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                        @csrf
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>{{ __('Log Out') }}</span>
+                    </form>
+                </li>
+                <!-- Authentication -->
+                {{-- <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <x-dropdown-link :href="route('logout')"
+                        onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-dropdown-link>
+                </form> --}}
             </ul>
         </div>
     </div>
