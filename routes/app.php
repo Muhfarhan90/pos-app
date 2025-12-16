@@ -38,8 +38,8 @@ Route::middleware('role:admin')->group(function () {
 });
 
 Route::middleware('role:admin|cashier|chef')->group(function () {
-
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('admin/orders', OrderController::class)->names('admin.orders');
     Route::post('/admin/items/{id}/update-status', [ItemController::class, 'updateStatus'])->name('admin.items.updateStatus');
+    Route::post('/admin/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 });

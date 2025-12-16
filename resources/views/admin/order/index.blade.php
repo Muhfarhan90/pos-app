@@ -70,6 +70,25 @@
                                                 <i class="bi bi-eye"></i> Lihat
                                             </a>
                                         </span>
+                                        @if (Auth::user()->role->role_name == 'admin' || Auth::user()->role->role_name == 'cashier')
+                                            @if ($order->status == 'pending' && $order->payment_method == 'tunai')
+                                                <form action="{{ route('admin.orders.updateStatus', $order->id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success btn-sm">
+                                                        <i class="bi bi-check-circle"></i> Terima Pembayaran
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @elseif(Auth::user()->role->role_name == 'chef' && $order->status == 'paid')
+                                            <form action="{{ route('admin.orders.updateStatus', $order->id) }}"
+                                                method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm">
+                                                    <i class="bi bi-check-circle"></i> Pesanan Siap
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                     {{-- <td>
                                         @if (Auth::user()->role->role_name == 'admin' || Auth::user()->role->role_name == 'cashier')

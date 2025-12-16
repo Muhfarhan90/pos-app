@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Dashboard Admin  ')
+@section('title', 'Dashboard Admin')
 
 @section('css')
 
@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="page-heading">
-        <h3>Selamat Datang, Admin!</h3>
+        <h3>Selamat Datang, {{ auth()->user()->fullname }}!</h3>
     </div>
     <div class="page-content">
         <section class="row">
