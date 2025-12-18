@@ -47,7 +47,7 @@
                                     $itemTotal = $item['price'] * $item['qty'];
                                     $subtotal += $itemTotal;
                                 @endphp
-                                <tr>
+                                <tr data-item-id="{{ $item['id'] }}" data-price="{{ $item['price'] }}">
                                     <th scope="row">
                                         <div class="d-flex align-items-center">
                                             <img src="{{ asset('img_item_upload/' . $item['image']) ?? asset('assets/customer/img/no-image.png') }}"
@@ -60,7 +60,8 @@
                                         <p class="mb-0 mt-4">{{ $item['name'] }}</p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 mt-4">{{ 'Rp' . number_format($item['price'], 0, ',', '.') }}</p>
+                                        <p class="mb-0 mt-4" id="price-{{ $item['id'] }}">
+                                            {{ 'Rp' . number_format($item['price'], 0, ',', '.') }}</p>
                                     </td>
                                     <td>
                                         <div class="input-group quantity mt-4" style="width: 100px;">
@@ -82,7 +83,8 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <p class="mb-0 mt-4">{{ 'Rp' . number_format($itemTotal, 0, ',', '.') }}</p>
+                                        <p class="mb-0 mt-4" id="line-total-{{ $item['id'] }}">
+                                            {{ 'Rp' . number_format($itemTotal, 0, ',', '.') }}</p>
                                     </td>
                                     <td>
                                         <button class="btn btn-md rounded-circle bg-light border mt-4"
@@ -115,18 +117,19 @@
                                 <h2 class="display-6 mb-4">Total <span class="fw-normal">Pesanan</span></h2>
                                 <div class="d-flex justify-content-between mb-4">
                                     <h5 class="mb-0 me-4">Subtotal</h5>
-                                    <p class="mb-0">{{ 'Rp' . number_format($subtotal, 0, ',', '.') }}</p>
+                                    <p class="mb-0" id="subtotal-amount">
+                                        {{ 'Rp' . number_format($subtotal, 0, ',', '.') }}</p>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <p class="mb-0 me-4">Pajak (10%)</p>
                                     <div class="">
-                                        <p class="mb-0">{{ 'Rp' . number_format($tax, 0, ',', '.') }}</p>
+                                        <p class="mb-0" id="tax-amount">{{ 'Rp' . number_format($tax, 0, ',', '.') }}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="py-4 mb-4 border-top d-flex justify-content-between">
                                 <h4 class="mb-0 ps-4 me-4">Total</h4>
-                                <h5 class="mb-0 pe-4">{{ 'Rp' . number_format($total, 0, ',', '.') }}</h5>
+                                <h5 class="mb-0 pe-4" id="grand-total">{{ 'Rp' . number_format($total, 0, ',', '.') }}</h5>
                             </div>
 
                         </div>
@@ -149,6 +152,37 @@
 
 @section('script')
     <script>
+        function formatRupiah(num) {
+            try {
+                return 'Rp' + new Intl.NumberFormat('id-ID').format(num);
+            } catch (e) {
+                return 'Rp' + num;
+            }
+        }
+
+        function recalculateTotals() {
+            var rows = document.querySelectorAll('tr[data-item-id]');
+            var subtotal = 0;
+            rows.forEach(function(row) {
+                var price = parseInt(row.getAttribute('data-price')) || 0;
+                var itemId = row.getAttribute('data-item-id');
+                var qtyInput = document.getElementById('qty-' + itemId);
+                var qty = parseInt(qtyInput.value) || 0;
+                var lineTotal = price * qty;
+                subtotal += lineTotal;
+                var lineTotalEl = document.getElementById('line-total-' + itemId);
+                if (lineTotalEl) lineTotalEl.textContent = formatRupiah(lineTotal);
+            });
+            var tax = Math.round(subtotal * 0.1);
+            var grand = subtotal + tax;
+            var subtotalEl = document.getElementById('subtotal-amount');
+            var taxEl = document.getElementById('tax-amount');
+            var grandEl = document.getElementById('grand-total');
+            if (subtotalEl) subtotalEl.textContent = formatRupiah(subtotal);
+            if (taxEl) taxEl.textContent = formatRupiah(tax);
+            if (grandEl) grandEl.textContent = formatRupiah(grand);
+        }
+
         function updateQuantity(itemId, change) {
             var qtyInput = document.getElementById('qty-' + itemId);
             var currentQty = parseInt(qtyInput.value);
@@ -175,7 +209,7 @@
                 .then(data => {
                     if (data.success) {
                         qtyInput.value = newQty;
-                        location.reload();
+                        recalculateTotals();
                     } else {
                         alert(data.message);
                     }
@@ -199,7 +233,12 @@
                 }).then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        location.reload();
+                        // Remove row from DOM
+                        var row = document.querySelector('tr[data-item-id="' + itemId + '"]');
+                        if (row) {
+                            row.parentNode.removeChild(row);
+                        }
+                        recalculateTotals();
                     } else {
                         alert(data.message);
                     }

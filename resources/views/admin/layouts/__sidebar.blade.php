@@ -52,6 +52,7 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
+
                 <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
                         <i class="bi bi-grid-fill"></i>
@@ -80,19 +81,21 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.users.index') }}" class="sidebar-link">
-                        <i class="bi bi-person-fill"></i>
-                        <span>Manajemen User</span>
-                    </a>
-                </li>
+                @if (auth()->user()->role->role_name == 'Admin')
+                    <li class="sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.users.index') }}" class="sidebar-link">
+                            <i class="bi bi-person-fill"></i>
+                            <span>Manajemen User</span>
+                        </a>
+                    </li>
 
-                <li class="sidebar-item {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.roles.index') }}" class="sidebar-link">
-                        <i class="bi bi-shield-lock-fill"></i>
-                        <span>Manajemen Role</span>
-                    </a>
-                </li>
+                    <li class="sidebar-item {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.roles.index') }}" class="sidebar-link">
+                            <i class="bi bi-shield-lock-fill"></i>
+                            <span>Manajemen Role</span>
+                        </a>
+                    </li>
+                @endif
 
                 <li class="sidebar-item">
                     <a href="{{ route('logout') }}" class="sidebar-link"

@@ -13,7 +13,7 @@
 
     @yield('content')
 
-    @include('customer.layouts.__footer')
+    {{-- @include('customer.layouts.__footer') --}}
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i

@@ -37,7 +37,7 @@
                                 <th>No</th>
                                 <th>Nama Kategori</th>
                                 <th>Deskripsi</th>
-                                <th>Aksi</th>
+                                <th colspan="2">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,6 +48,9 @@
                                     <td>{{ Str::limit($category->description, 50) }}</td>
                                     <td><a href="{{ route('admin.categories.edit', $category->id) }}"
                                             class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i>Edit</a>
+
+                                    </td>
+                                    <td>
                                         <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
                                             class="d-inline"
                                             onsubmit="return confirm('Are you sure you want to delete this category?');">
